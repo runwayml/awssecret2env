@@ -14,13 +14,25 @@ DB_PASSWORD=db/dev/DB_PASSWORD
 ```
 
 ```bash
-# Usage: awssecret2env <input-file>
-awssecret2env secrets.txt > .env
-
-# cat .env
+# Usage: awssecret2env [OPTIONS] <input-file>
+awssecret2env secrets.txt
 # DB_HOST=<REDACTED>
 # DB_USER=<REDACTED>
 # DB_PASSWORD=<REDACTED>
+```
+
+With no options, `awssecret2env` prints the resulting environment variables to `stdout`. You can specify an output file with the `--output` flag, and optionally add an `export` statement to each line with `--export`.
+
+```bash
+awssecret2env --output .env --export secrets.txt
+
+cat .env
+# DB_HOST=<REDACTED>
+# DB_USER=<REDACTED>
+# DB_PASSWORD=<REDACTED>
+
+source .env
+# The env vars should now be injected in your shell
 ```
 
 ## Download
@@ -41,4 +53,15 @@ PLATFORM=macos # supported platforms: "macos", "windows", "linux64", "linuxarm6"
 wget https://awssecret2env.s3.amazonaws.com/master/awssecret2env-${PLATFORM}
 chmod +x awssecret2env-${PLATFORM}
 mv awssecret2env-${PLATFORM} /usr/local/bin/awssecret2env
+```
+
+## Usage
+
+```
+Usage: ./build/bin/awssecret2env [OPTIONS] <input-file> ...
+Note: <input-file> is a required positional argument.
+  -r, --aws-region string   The name of the AWS region where secrets are stored (default "us-east-1")
+  -e, --export              Prepends "export" statements in front of the output env variables
+  -h, --help                Show this screen
+  -o, --output string       Redirects output to a file instead of stdout
 ```
