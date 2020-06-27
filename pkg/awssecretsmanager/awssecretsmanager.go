@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
-	"github.com/runwayml/awssecret2env/parser"
+	"github.com/runwayml/awssecret2env/pkg/parser"
 )
 
 type Secret map[string]string
@@ -33,7 +33,7 @@ func GetAWSSecret(name string) (Secret, error) {
 	svc := secretsmanager.New(session.New(), aws.NewConfig().WithRegion(region))
 	input := &secretsmanager.GetSecretValueInput{
 		SecretId:     aws.String(name),
-		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
+		VersionStage: aws.String("AWSCURRENT"),
 	}
 
 	result, err := svc.GetSecretValue(input)

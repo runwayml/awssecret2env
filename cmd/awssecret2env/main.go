@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/runwayml/awssecret2env/awssecretsmanager"
-	"github.com/runwayml/awssecret2env/parser"
-	"github.com/runwayml/awssecret2env/utils"
+	"github.com/runwayml/awssecret2env/pkg/awssecretsmanager"
+	"github.com/runwayml/awssecret2env/pkg/parser"
+	"github.com/runwayml/awssecret2env/pkg/utils"
 )
 
 func main() {
