@@ -1,7 +1,7 @@
 NAME := awssecret2env
 MAIN_SRC := cmd/$(NAME)/main.go
 
-.PHONY: default build clean install build-all
+.PHONY: default build clean install dist build-all upload
 
 default: build
 
@@ -17,17 +17,19 @@ clean:
 install: build
 	cp ./build/bin/$(NAME) /usr/local/bin/$(NAME)
 
+dist: build-all upload
+
 build-all: clean default
-	mkdir -p build/package/$(NAME)-macos build/package/$(NAME)-windows build/package/$(NAME)-linux-x64 build/package/$(NAME)-linux-arm7 build/package/$(NAME)-linux-arm6
-	GOOS=darwin GOARCH=amd64 go build -o build/package/$(NAME)-macos/$(NAME) $(MAIN_SRC)
-	GOOS=windows GOARCH=amd64 go build -o build/package/$(NAME)-windows/$(NAME) $(MAIN_SRC)
-	GOOS=linux GOARCH=amd64 go build -o build/package/$(NAME)-linux-x64/$(NAME) $(MAIN_SRC)
-	GOOS=linux GOARCH=arm GOARM=7 go build -o build/package/$(NAME)-linux-arm7/$(NAME) $(MAIN_SRC)
-	GOOS=linux GOARCH=arm GOARM=6 go build -o build/package/$(NAME)-linux-arm6/$(NAME) $(MAIN_SRC)
-	cd build/package/ && \
-		tar czf $(NAME)-linux-x64.tar.gz $(NAME)-linux-x64/ && \
-		tar czf $(NAME)-linux-arm7.tar.gz $(NAME)-linux-arm7/ && \
-		tar czf $(NAME)-linux-arm6.tar.gz $(NAME)-linux-arm6/ && \
-		zip -r -9 $(NAME)-macos.zip $(NAME)-macos/ && \
-		zip -r -9 $(NAME)-windows.zip $(NAME)-windows/
-	rm -rf build/package/$(NAME)-macos build/package/$(NAME)-windows build/package/$(NAME)-linux-x64 build/package/$(NAME)-linux-arm7 build/package/$(NAME)-linux-arm6
+	mkdir -p build/dist
+	GOOS=darwin GOARCH=amd64 go build -o build/dist/$(NAME)-macos $(MAIN_SRC)
+	GOOS=windows GOARCH=amd64 go build -o build/dist/$(NAME)-windows $(MAIN_SRC)
+	GOOS=linux GOARCH=amd64 go build -o build/dist/$(NAME)-linux64 $(MAIN_SRC)
+	GOOS=linux GOARCH=arm GOARM=7 go build -o build/dist/$(NAME)-linuxarm7 $(MAIN_SRC)
+	GOOS=linux GOARCH=arm GOARM=6 go build -o build/dist/$(NAME)-linuxarm6 $(MAIN_SRC)
+
+upload:
+	aws s3 cp build/dist/$(NAME)-macos s3://awssecret2env/master/$(NAME)-macos --content-type application/octet-stream
+	aws s3 cp build/dist/$(NAME)-windows s3://awssecret2env/master/$(NAME)-windows --content-type application/octet-stream
+	aws s3 cp build/dist/$(NAME)-linux64 s3://awssecret2env/master/$(NAME)-linux64 --content-type application/octet-stream
+	aws s3 cp build/dist/$(NAME)-linuxarm7 s3://awssecret2env/master/$(NAME)-linuxarm7 --content-type application/octet-stream
+	aws s3 cp build/dist/$(NAME)-linuxarm6 s3://awssecret2env/master/$(NAME)-linuxarm6 --content-type application/octet-stream
