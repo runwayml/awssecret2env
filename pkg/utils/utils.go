@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func LoadFile(path string) (string, error) {
@@ -14,9 +15,12 @@ func LoadFile(path string) (string, error) {
 	return string(contents), nil
 }
 
-func PrintUsageAndExit() {
-	fmt.Println("Usage: awssecret2env <input-file>")
-	os.Exit(1)
+func SaveFile(path, contents string, mode os.FileMode) error {
+	err := ioutil.WriteFile(path, []byte(contents), mode)
+	if err != nil {
+		return fmt.Errorf("error writing file %s: %s", path, err)
+	}
+	return nil
 }
 
 func PrintErrorAndExit(err error) {
@@ -34,6 +38,17 @@ func SecretsToEnvString(secrets map[string]string) string {
 	output := ""
 	for key, value := range secrets {
 		output += fmt.Sprintf("%s=%s\n", key, value)
+	}
+	return output
+}
+
+func PrependExportStatementsBeforeEachLine(input string) string {
+	lines := strings.Split(input, "\n")
+	output := ""
+	for _, line := range lines {
+		if strings.TrimSpace(line) != "" {
+			output += "export " + line + "\n"
+		}
 	}
 	return output
 }
