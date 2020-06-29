@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -35,11 +36,12 @@ func HandleError(err error) {
 }
 
 func SecretsToEnvString(secrets map[string]string) string {
-	output := ""
+	lines := make([]string, len(secrets))
 	for key, value := range secrets {
-		output += fmt.Sprintf("%s=%s\n", key, value)
+		lines = append(lines, fmt.Sprintf("%s=%s\n", key, value))
 	}
-	return output
+	sort.Strings(lines)
+	return strings.Join(lines, "")
 }
 
 func PrependExportStatementsBeforeEachLine(input string) string {
