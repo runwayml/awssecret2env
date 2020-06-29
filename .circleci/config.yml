@@ -5,8 +5,14 @@ jobs:
       - image: circleci/golang:1.14
     steps:
       - checkout
-      - run: sudo pip3 install --upgrade awscli
-      - run: make dist
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get install -y python3-pip
+            sudo pip3 install --upgrade awscli
+      - run:
+          name: Build and upload to S3
+          command: make dist
 workflows:
   dist:
     jobs:
