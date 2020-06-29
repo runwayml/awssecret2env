@@ -27,13 +27,27 @@ With no options, `awssecret2env` prints the resulting environment variables to `
 awssecret2env --output .env --export secrets.txt
 
 cat .env
-# DB_HOST=<REDACTED>
-# DB_USER=<REDACTED>
-# DB_PASSWORD=<REDACTED>
+# export DB_HOST=<REDACTED>
+# export DB_USER=<REDACTED>
+# export DB_PASSWORD=<REDACTED>
 
 source .env
 # The env vars should now be injected in your shell
 ```
+
+### Input File
+
+Input files are in the following format:
+
+```bash
+ENV_VAR_NAME=secret-name/secret-key
+ENV_VAR_NAME_2=secret-name/secret-key-2
+ENV_VAR_NAME_3=other-secret-name/other-key
+```
+
+The secret's key is always interpreted as the string following the last `/` character in the line.
+
+> NOTE: Secret **names** may contain `/` characters, but secret **keys** SHOULD NOT.
 
 ## Download
 
