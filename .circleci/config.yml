@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  dist:
+    docker:
+      - image: circleci/golang:1.14
+    steps:
+      - checkout
+      - run: make dist
+workflows:
+  dist:
+    jobs:
+      - dist:
+          filters:
+            branches:
+              only:
+                - master

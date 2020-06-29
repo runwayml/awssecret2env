@@ -19,7 +19,7 @@ install: build
 
 dist: build-all upload
 
-build-all: clean default
+build-all: clean build
 	mkdir -p build/dist
 	GOOS=darwin GOARCH=amd64 go build -o build/dist/$(NAME)-macos $(MAIN_SRC)
 	GOOS=windows GOARCH=amd64 go build -o build/dist/$(NAME)-windows $(MAIN_SRC)
