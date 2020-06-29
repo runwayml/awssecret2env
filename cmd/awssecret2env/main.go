@@ -30,7 +30,7 @@ func main() {
 	}
 
 	if args.outputFilename != "" {
-		err = utils.SaveFile(args.outputFilename, output, 0600)
+		err = utils.SaveFile(args.outputFilename, output, 0644)
 		utils.HandleError(err)
 	} else {
 		fmt.Print(output)
