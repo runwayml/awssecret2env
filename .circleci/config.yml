@@ -5,6 +5,7 @@ jobs:
       - image: circleci/golang:1.14
     steps:
       - checkout
+      - run: sudo pip3 install --upgrade awscli
       - run: make dist
 workflows:
   dist:
