@@ -63,8 +63,9 @@ You can also download and execute `awssecret2env` programmatically.
 
 ```bash
 PLATFORM=macos # supported platforms: "macos", "windows", "linux64", "linuxarm6", or "linuxarm7"
+VERSION=latest # supported versions: "latest", "master", "v0.1.0", etc.
 
-wget https://awssecret2env.s3.amazonaws.com/master/awssecret2env-${PLATFORM}
+wget https://awssecret2env.s3.amazonaws.com/${VERSION}/awssecret2env-${PLATFORM}
 chmod +x awssecret2env-${PLATFORM}
 mv awssecret2env-${PLATFORM} /usr/local/bin/awssecret2env
 ```

@@ -1,23 +1,43 @@
+common-job-attribues: &common-job-attributes
+  docker:
+    - image: circleci/golang:1.14
+
+install-aws-cli: &install-aws-cli
+  run:
+    name: Install AWS CLI
+    command: |
+      sudo apt-get install -y python3-pip
+      sudo pip3 install --upgrade awscli
+
 version: 2.1
 jobs:
-  dist:
-    docker:
-      - image: circleci/golang:1.14
+  master:
+    <<: *common-job-attributes
     steps:
       - checkout
+      - <<: *install-aws-cli
       - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get install -y python3-pip
-            sudo pip3 install --upgrade awscli
+          name: Build and upload master
+          command: make master
+  release:
+    <<: *common-job-attributes
+    steps:
+      - checkout
+      - <<: *install-aws-cli
       - run:
-          name: Build and upload to S3
-          command: make dist
+          name: Build and upload tagged release
+          command: make release
 workflows:
-  dist:
+  build-and-upload-master:
     jobs:
-      - dist:
+      - master:
           filters:
             branches:
               only:
                 - master
+  release-new-version:
+    jobs:
+      - release:
+          filters:
+            tags:
+              only: /^v.*/
