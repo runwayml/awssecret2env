@@ -53,11 +53,11 @@ The secret's key is always interpreted as the string following the last `/` char
 
 Downloaded files must be made executable before they can be run.
 
-* [MacOS](https://awssecret2env.s3.amazonaws.com/master/awssecret2env-macos)
-* [Windows](https://awssecret2env.s3.amazonaws.com/master/awssecret2env-windows)
-* [Linux X86_64](https://awssecret2env.s3.amazonaws.com/master/awssecret2env-linux64)
-* [Linux ARM6](https://awssecret2env.s3.amazonaws.com/master/awssecret2env-linuxarm6)
-* [Linux ARM7](https://awssecret2env.s3.amazonaws.com/master/awssecret2env-linuxarm7)
+* [MacOS](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos)
+* [Windows](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-windows)
+* [Linux X86_64](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linux64)
+* [Linux ARM6](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm6)
+* [Linux ARM7](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm7)
 
 You can also download and execute `awssecret2env` programmatically.
 
