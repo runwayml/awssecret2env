@@ -1,6 +1,6 @@
 # `awssecret2env`
 
-![CirclCI Build Status](https://circleci.com/gh/runwayml/awssecret2env.svg?style=shield)
+[![CirclCI Build Status](https://circleci.com/gh/runwayml/awssecret2env.svg?style=shield)](https://app.circleci.com/pipelines/github/runwayml/awssecret2env)
 
 Convert secrets stored in AWS Secrets Manager to environment variables.
 
