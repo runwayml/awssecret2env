@@ -38,7 +38,10 @@ func HandleError(err error) {
 func SecretsToEnvString(secrets map[string]string) string {
 	lines := make([]string, len(secrets))
 	for key, value := range secrets {
-		lines = append(lines, fmt.Sprintf("%s=%s\n", key, value))
+		// Escape single quotes via:
+		//	https://stackoverflow.com/questions/1250079/how-to-escape-single-quotes-within-single-quoted-strings
+		escaped := strings.ReplaceAll(value, "'", "'\"'\"'")
+		lines = append(lines, fmt.Sprintf("%s='%s'\n", key, escaped))
 	}
 	sort.Strings(lines)
 	return strings.Join(lines, "")
