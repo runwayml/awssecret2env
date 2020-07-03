@@ -63,17 +63,38 @@ func GetAWSSecret(name string) (Secret, error) {
 
 func GetAllSecrets(mappings parser.EnvKeyToSecretPath) (map[string]string, error) {
 	output := make(map[string]string)
+	resultsChan := make(chan concurrentSecretResult, len(mappings))
 	for envName, secretPath := range mappings {
-		secret, err := GetAWSSecret(secretPath.SecretName)
-		if err != nil {
-			return nil, err
+		go getAWSSecretConcurrently(envName, secretPath, resultsChan)
+	}
+	for i := 0; i < cap(resultsChan); i++ {
+		result := <-resultsChan
+		if result.err != nil {
+			return nil, result.err
 		}
-		if _, exists := secret[secretPath.Key]; !exists {
-			return nil, fmt.Errorf("AWS Secret \"%s\" does not contain key \"%s\"", secretPath.SecretName, secretPath.Key)
+		if _, exists := result.secret[result.secretPath.Key]; !exists {
+			return nil, fmt.Errorf("AWS Secret \"%s\" does not contain key \"%s\"", result.secretPath.SecretName, result.secretPath.Key)
 		}
-		output[envName] = secret[secretPath.Key]
+		output[result.envName] = result.secret[result.secretPath.Key]
 	}
 	return output, nil
+}
+
+type concurrentSecretResult struct {
+	envName    string
+	secretPath parser.SecretPath
+	secret     Secret
+	err        error
+}
+
+func getAWSSecretConcurrently(envName string, secretPath parser.SecretPath, ch chan concurrentSecretResult) {
+	secret, err := GetAWSSecret(secretPath.SecretName)
+	ch <- concurrentSecretResult{
+		envName,
+		secretPath,
+		secret,
+		err,
+	}
 }
 
 func stringToSecret(rawSecret string) (Secret, error) {
