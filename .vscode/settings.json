@@ -1,4 +1,5 @@
 {
   "go.useLanguageServer": true,
-  "go.lintOnSave": "file"
+  "go.lintOnSave": "file",
+  "editor.tabSize": 8
 }
