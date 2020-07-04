@@ -14,6 +14,8 @@ import (
 	"github.com/runwayml/awssecret2env/pkg/parser"
 )
 
+const MAX_CONCURRENT_NETWORK_REQUESTS = 100
+
 type Secret map[string]string
 
 var region = "us-east-1"
@@ -63,12 +65,13 @@ func GetAWSSecret(name string) (Secret, error) {
 
 func GetAllSecrets(mappings parser.EnvKeyToSecretPath) (map[string]string, error) {
 	output := make(map[string]string)
-	resultsChan := make(chan concurrentSecretResult, len(mappings))
+	concurrencyLimiter := make(chan struct{}, MAX_CONCURRENT_NETWORK_REQUESTS)
+	results := make(chan concurrentSecretResult, len(mappings))
 	for envName, secretPath := range mappings {
-		go getAWSSecretConcurrently(envName, secretPath, resultsChan)
+		go getAWSSecretConcurrently(envName, secretPath, results, concurrencyLimiter)
 	}
-	for i := 0; i < cap(resultsChan); i++ {
-		result := <-resultsChan
+	for i := 0; i < cap(results); i++ {
+		result := <-results
 		if result.err != nil {
 			return nil, result.err
 		}
@@ -87,9 +90,11 @@ type concurrentSecretResult struct {
 	err        error
 }
 
-func getAWSSecretConcurrently(envName string, secretPath parser.SecretPath, ch chan concurrentSecretResult) {
+func getAWSSecretConcurrently(envName string, secretPath parser.SecretPath, results chan concurrentSecretResult, concurrencyLimiter chan struct{}) {
+	concurrencyLimiter <- struct{}{}
 	secret, err := GetAWSSecret(secretPath.SecretName)
-	ch <- concurrentSecretResult{
+	<-concurrencyLimiter
+	results <- concurrentSecretResult{
 		envName,
 		secretPath,
 		secret,
