@@ -42,6 +42,7 @@ source .env
 Input files are in the following format:
 
 ```bash
+# lines beginning with "#" are ignored as a comment
 ENV_VAR_NAME=secret-name/secret-key
 ENV_VAR_NAME_2=secret-name/secret-key-2
 ENV_VAR_NAME_3=other-secret-name/other-key

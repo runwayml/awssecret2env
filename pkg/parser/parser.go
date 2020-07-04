@@ -20,6 +20,9 @@ func ParseInput(input string) (EnvKeyToSecretPath, error) {
 	}
 	for i, line := range lines {
 		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "#") {
+			continue
+		}
 		if !strings.Contains(line, "=") {
 			return nil, fmt.Errorf("parse input error: line %d missing required \"=\" separated env pair", i+1)
 		}
@@ -41,6 +44,9 @@ func ParseInput(input string) (EnvKeyToSecretPath, error) {
 			SecretName: strings.Join(secretParts[:len(secretParts)-1], "/"),
 			Key:        secretParts[len(secretParts)-1],
 		}
+	}
+	if len(output) < 1 {
+		return nil, fmt.Errorf("parse input error: no secrets defined in input file")
 	}
 
 	return output, nil
