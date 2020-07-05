@@ -18,7 +18,10 @@ jobs:
       - <<: *install-aws-cli
       - run:
           name: Build and upload master
-          command: make master
+          command: |
+            make env
+            source .env
+            make master
   release:
     <<: *common-job-attributes
     steps:
@@ -26,7 +29,10 @@ jobs:
       - <<: *install-aws-cli
       - run:
           name: Build and upload tagged release
-          command: make release
+          command: |
+            make env
+            source .env
+            make release
 workflows:
   build-and-upload-master:
     jobs:

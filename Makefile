@@ -2,7 +2,7 @@ NAME := awssecret2env
 MAIN_SRC := cmd/$(NAME)/main.go
 LATEST_TAG := $(shell git describe --tag)
 
-.PHONY: default build clean install build-all checkout-latest-tag upload-master upload-release release master
+.PHONY: default build clean install build-all checkout-latest-tag upload-master upload-release env release master
 
 default: build
 
@@ -48,6 +48,9 @@ upload-release:
 	aws s3 cp s3://awssecret2env/$(LATEST_TAG)/$(NAME)-linux64 s3://awssecret2env/latest/$(NAME)-linux64
 	aws s3 cp s3://awssecret2env/$(LATEST_TAG)/$(NAME)-linuxarm7 s3://awssecret2env/latest/$(NAME)-linuxarm7
 	aws s3 cp s3://awssecret2env/$(LATEST_TAG)/$(NAME)-linuxarm6 s3://awssecret2env/latest/$(NAME)-linuxarm6
+
+env: build
+	./build/bin/$(NAME) --export --output .env secrets.txt
 
 release: checkout-latest-tag build-all upload-release
 
