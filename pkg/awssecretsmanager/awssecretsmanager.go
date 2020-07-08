@@ -121,24 +121,20 @@ func getSecretResultError(secretName string, err error) error {
 	// See https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
 	if err != nil {
 		message := fmt.Sprintf("error fetching secret %s", secretName)
-		if err, ok := err.(awserr.Error); ok {
-			switch err.Code() {
+		if awserr, ok := err.(awserr.Error); ok {
+			switch awserr.Code() {
 			case secretsmanager.ErrCodeDecryptionFailure:
-				// fmt.Println(secretsmanager.ErrCodeDecryptionFailure, err.Error())
 				message += ": AWS Secrets Manager can't decrypt the protected secret text using the provided KMS key."
 			case secretsmanager.ErrCodeInternalServiceError:
-				// fmt.Println(secretsmanager.ErrCodeInternalServiceError, err.Error())
 				message += ": AWS Secrets Manager experienced an internal service error"
 			case secretsmanager.ErrCodeInvalidParameterException:
-				// fmt.Println(secretsmanager.ErrCodeInvalidParameterException, err.Error())
 				message += ": An invalid parameter was provided to AWS Secret Manager"
 			case secretsmanager.ErrCodeInvalidRequestException:
-				// fmt.Println(secretsmanager.ErrCodeInvalidRequestException, err.Error())
 				message += ": An AWS Secret Manager parameter value was provided that is not valid for the current state of the resource"
 			case secretsmanager.ErrCodeResourceNotFoundException:
 				message += ": AWS Secret Manager resource not found"
 			default:
-				message += ": " + err.Error()
+				message += ": " + awserr.Error()
 			}
 		} else {
 			message += ": " + err.Error()
