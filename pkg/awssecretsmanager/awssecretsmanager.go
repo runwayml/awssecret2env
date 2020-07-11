@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"strconv"
 
 	"encoding/json"
 
@@ -17,7 +16,7 @@ import (
 
 const MAX_CONCURRENT_NETWORK_REQUESTS = 100
 
-type Secret map[string]interface{}
+type Secret map[string]string
 
 var region = "us-east-1"
 
@@ -79,23 +78,9 @@ func GetAllSecrets(mappings parser.EnvKeyToSecretPath) (map[string]string, error
 		if _, exists := result.secret[result.secretPath.Key]; !exists {
 			return nil, fmt.Errorf("AWS Secret \"%s\" does not contain key \"%s\"", result.secretPath.SecretName, result.secretPath.Key)
 		}
-		secretValue, err := parseSecretValue(result.secret[result.secretPath.Key])
-		if err != nil {
-			return nil, getSecretResultError(result.secretPath.SecretName, err)
-		}
-		output[result.envName] = secretValue
+		output[result.envName] = result.secret[result.secretPath.Key]
 	}
 	return output, nil
-}
-
-func parseSecretValue(value interface{}) (string, error) {
-	if val, ok := value.(string); ok {
-		return val, nil
-	}
-	if val, ok := value.(int); ok {
-		return strconv.Itoa(val), nil
-	}
-	return "", fmt.Errorf("raw secret value is not an int or string: %s", value)
 }
 
 type concurrentSecretResult struct {
