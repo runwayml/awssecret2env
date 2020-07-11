@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+* Fix bug where fetching secrets with non-string values caused `awssecret2env` to crash. JSON secret values of all types are now converted to strings when they are transformed to environment variables.
+
 ## v0.3.0
 
 * Fetch secrets concurrently, significantly decreasing execution time especially with input files containing lots of secrets.
