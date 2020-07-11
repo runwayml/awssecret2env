@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
 	"github.com/runwayml/awssecret2env/pkg/parser"
+	"github.com/spf13/cast"
 )
 
 const MAX_CONCURRENT_NETWORK_REQUESTS = 100
@@ -105,10 +106,18 @@ func getAWSSecretConcurrently(envName string, secretPath parser.SecretPath, resu
 func stringToSecret(rawSecret string) (Secret, error) {
 	raw := []byte(rawSecret)
 	if json.Valid(raw) {
-		secret := Secret{}
-		err := json.Unmarshal(raw, &secret)
+		secretWithAnyValueTypes := make(map[string]interface{})
+		err := json.Unmarshal(raw, &secretWithAnyValueTypes)
 		if err != nil {
 			return nil, fmt.Errorf("error unmarshalling JSON: %s", err)
+		}
+		secret := Secret{}
+		for key, value := range secretWithAnyValueTypes {
+			stringValue, err := cast.ToStringE(value)
+			if err != nil {
+				return nil, fmt.Errorf("error converting secret value of type %t to string: %v", value, err)
+			}
+			secret[key] = stringValue
 		}
 		return secret, nil
 	} else {
