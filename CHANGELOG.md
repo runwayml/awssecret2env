@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.2
+
+* Add Apple Silicon support and build with Go v1.17.
+
 ## v0.3.1
 
 * Fix bug where fetching secrets with non-string values caused `awssecret2env` to crash. JSON secret values of all types are now converted to strings when they are transformed to environment variables.
