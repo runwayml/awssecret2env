@@ -57,7 +57,7 @@ The secret's key is always interpreted as the string following the last `/` char
 Downloaded files must be made executable before they can be run.
 
 * [MacOS (Intel)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos)
-* [MacOS (M1)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos-arm64)
+* [MacOS (Apple Silicon)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos-arm64)
 * [Windows](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-windows)
 * [Linux (X86_64)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linux64)
 * [Linux (ARM6)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm6)
