@@ -56,16 +56,17 @@ The secret's key is always interpreted as the string following the last `/` char
 
 Downloaded files must be made executable before they can be run.
 
-* [MacOS](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos)
+* [MacOS (Intel)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos)
+* [MacOS (M1)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-macos-arm64)
 * [Windows](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-windows)
-* [Linux X86_64](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linux64)
-* [Linux ARM6](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm6)
-* [Linux ARM7](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm7)
+* [Linux (X86_64)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linux64)
+* [Linux (ARM6)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm6)
+* [Linux (ARM7)](https://awssecret2env.s3.amazonaws.com/latest/awssecret2env-linuxarm7)
 
 You can also download and execute `awssecret2env` programmatically.
 
 ```bash
-PLATFORM=macos # supported platforms: "macos", "windows", "linux64", "linuxarm6", or "linuxarm7"
+PLATFORM=macos # supported platforms: "macos", "macos-arm64", "windows", "linux64", "linuxarm6", or "linuxarm7"
 VERSION=latest # supported versions: "latest", "master", "v0.1.0", etc.
 
 wget https://awssecret2env.s3.amazonaws.com/${VERSION}/awssecret2env-${PLATFORM}
